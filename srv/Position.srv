@@ -1,5 +1,5 @@
-double y_coord
-double z_coord
-double dis
+float32 y_coord
+float32 z_coord
+float32 dis
 
 ---

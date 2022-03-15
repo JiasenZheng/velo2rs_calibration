@@ -16,7 +16,15 @@
 
     <node name = "rviz" pkg = "rviz" type = "rviz" args = "-d $(find velo2rs)/config/calib_sim.rviz" if = "$(arg use_rviz)"/>
 
-    <node name = "velo2rs_find_points" pkg = "velo2rs" type = "velo2rs_find_points"/>
+    <node name = "velo2rs_find_points" pkg = "velo2rs" type = "velo2rs_find_points">
+        <remap from="/set_pos" to="/velo/set_pos"/>
+        <remap from="/record_point" to="/velo/record_point"/>
+    </node>
+
+    <node name = "velo2rs_find_points" pkg = "velo2rs" type = "velo2rs_find_points">
+        <remap from="/set_pos" to="/rs/set_pos"/>
+        <remap from="/record_point" to="/rs/record_point"/>
+    </node>
 
 
 </launch>
