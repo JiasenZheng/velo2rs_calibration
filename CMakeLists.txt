@@ -141,7 +141,8 @@ include
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_find_points src/find_points.cpp)
+add_executable(${PROJECT_NAME}_find_velo_points src/find_velo_points.cpp)
+add_executable(${PROJECT_NAME}_find_rs_points src/find_rs_points.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -151,10 +152,15 @@ add_executable(${PROJECT_NAME}_find_points src/find_points.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(${PROJECT_NAME}_find_points ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_find_velo_points ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_find_rs_points ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_find_points
+target_link_libraries(${PROJECT_NAME}_find_velo_points
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(${PROJECT_NAME}_find_rs_points
   ${catkin_LIBRARIES}
 )
 
@@ -174,10 +180,12 @@ target_link_libraries(${PROJECT_NAME}_find_points
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-install(TARGETS ${PROJECT_NAME}_find_points
+install(TARGETS ${PROJECT_NAME}_find_velo_points
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
+install(TARGETS ${PROJECT_NAME}_find_rs_points
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
 # install(TARGETS ${PROJECT_NAME}
