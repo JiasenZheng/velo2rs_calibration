@@ -5,8 +5,13 @@
     <rosparam command = "load" file = "$(find slam)/config/pid_gains.yaml"/>
 
     <!-- include gazebo empty_world launch file -->
-    <include file = "$(find gazebo_ros)/launch/empty_world.launch">
+    <include file = "$(find gazebo_ros)/launch/empty_world.launch"/>
         <arg name = "world_name" value = "$(find slam)/world/jackal_world.world"/>
+    </include>
+
+    <!-- include jackal description launch file -->
+    <include file = "$(find slam)/launch/jackal_description.launch">
+        <arg name = "config" value = "3d_laser"/>
     </include>
 
     <!-- include jackal control launch file -->
@@ -21,4 +26,4 @@
     <node name = "rviz" pkg = "rviz" type = "rviz"/>
 
 
-<launch>
+</launch>
