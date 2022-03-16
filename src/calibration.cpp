@@ -12,6 +12,12 @@ static arma::mat rs_z;
 static arma::mat velo_x_dir, velo_y_dir, velo_z_dir;
 static arma::mat rs_x_dir, rs_y_dir, rs_z_dir;
 
+static arma::mat Tvelo_obj;
+static arma::mat Trs_obj;
+static arma::mat Tvelo_rs;
+
+static double x_coord, y_coord, z_coord, yaw, pitch, roll;
+
 arma::mat normalize(const arma::mat &m)
 {
     double x,y,z;
@@ -72,6 +78,44 @@ int main(int argc, char** argv)
 
     // Calculate normalized directional vector (x,y,z)
     velo_x_dir = normalize(velo_x - velo_o);
+    velo_x_dir.print("velo_x: ");
+    velo_z_dir = normalize(velo_z - velo_o);
+    velo_z_dir.print("velo_z: ");
+    velo_y_dir = arma::cross(velo_z_dir,velo_x_dir);
+    velo_y_dir.print("velo_y: ");
+
+    rs_x_dir = normalize(rs_x - rs_o);
+    rs_x_dir.print("rs_x: ");
+    rs_z_dir = normalize(rs_z - rs_o);
+    rs_z_dir.print("rs_z: ");
+    rs_y_dir = arma::cross(rs_z_dir,rs_x_dir);
+    rs_y_dir.print("rs_y: ");
+
+    // Construct T(velo->obj) and T(rs->obj)
+    arma::mat velo_rot_pos = arma::join_horiz(velo_x_dir,velo_y_dir,velo_z_dir,velo_o);
+    arma::mat bottom = arma::mat({0.0, 0.0, 0.0, 1.0});
+    Tvelo_obj = arma::join_vert(velo_rot_pos,bottom);
+    Tvelo_obj.print("Tvelo_obj: ");
+
+    arma::mat rs_rot_pos = arma::join_horiz(rs_x_dir,rs_y_dir,rs_z_dir,rs_o);
+    Trs_obj = arma::join_vert(rs_rot_pos,bottom);
+    Trs_obj.print("Trs_obj: ");
+
+    // Compute T(velo->rs)
+    Tvelo_rs = Tvelo_obj*arma::inv(Trs_obj);
+    Tvelo_rs.print("Tvelo_rs: ");
+
+    // Get x, y, z
+    x_coord = Tvelo_rs(0,3);
+    y_coord = Tvelo_rs(1,3);
+    z_coord = Tvelo_rs(2,3);
+    ROS_INFO("x: %f, y: %f, z: %f",x_coord, y_coord, z_coord);
+
+    // Compute yaw, pitch, and roll
+    yaw = atan2(Tvelo_rs(1,0),Tvelo_rs(0,0));
+    pitch = atan2(-Tvelo_rs(2,0),sqrt(pow(Tvelo_rs(2,1),2)+pow(Tvelo_rs(2,2),2)));
+    roll = atan2(Tvelo_rs(2,1),Tvelo_rs(2,2));
+    ROS_INFO("yaw: %f, pitch: %f, roll: %f", yaw, pitch, roll);
  
 
 }
