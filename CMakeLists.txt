@@ -143,6 +143,7 @@ include
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_find_velo_points src/find_velo_points.cpp)
 add_executable(${PROJECT_NAME}_find_rs_points src/find_rs_points.cpp)
+add_executable(${PROJECT_NAME}_calibration src/calibration.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -154,6 +155,7 @@ add_executable(${PROJECT_NAME}_find_rs_points src/find_rs_points.cpp)
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_find_velo_points ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(${PROJECT_NAME}_find_rs_points ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_calibration ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_find_velo_points
@@ -164,6 +166,13 @@ target_link_libraries(${PROJECT_NAME}_find_rs_points
   ${catkin_LIBRARIES}
 )
 
+target_link_libraries(${PROJECT_NAME}_calibration
+  ${catkin_LIBRARIES}
+)
+
+target_link_libraries(${PROJECT_NAME}_calibration
+  ${ARMADILLO_LIBRARIES}
+)
 #############
 ## Install ##
 #############
@@ -184,6 +193,9 @@ install(TARGETS ${PROJECT_NAME}_find_velo_points
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 install(TARGETS ${PROJECT_NAME}_find_rs_points
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+install(TARGETS ${PROJECT_NAME}_calibration
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 ## Mark libraries for installation
