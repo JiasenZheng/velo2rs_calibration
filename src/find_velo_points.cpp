@@ -15,9 +15,9 @@ static ros::ServiceServer set_pos;
 static ros::ServiceServer record_point;
 static double y_coord = 0.0;
 static double z_coord = 0.0;
-static double d = 0.3;
+static double d = 0.2;
 
-static pcl::PointXYZ left_point, right_point;
+static pcl::PointXYZ coord_o, coord_x, coord_z;
 
 
 
@@ -46,17 +46,32 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &input)
                 colored_point.g = 0;
                 colored_point.b = 0;
                 colored_point.a = 255;
-                if (cloud_in[i].y > left_point.y)
+                if (cloud_in[i].y > coord_o.y or fabs(cloud_in[i].y - coord_o.y)<0.01)
                 {
-                    left_point.x = cloud_in[i].x;
-                    left_point.y = cloud_in[i].y;
-                    left_point.z = cloud_in[i].z;
+                    if (cloud_in[i].z < coord_o.z)
+                    {
+                        coord_o.x = cloud_in[i].x;
+                        coord_o.y = cloud_in[i].y;
+                        coord_o.z = cloud_in[i].z;
+                    }
                 }
-                if (cloud_in[i].y < right_point.y)
+                if (cloud_in[i].y < coord_x.y or fabs(cloud_in[i].y - coord_x.y)<0.01)
                 {
-                    right_point.x = cloud_in[i].x;
-                    right_point.y = cloud_in[i].y;
-                    right_point.z = cloud_in[i].z;
+                    if (cloud_in[i].z < coord_x.z)
+                    {
+                        coord_x.x = cloud_in[i].x;
+                        coord_x.y = cloud_in[i].y;
+                        coord_x.z = cloud_in[i].z;
+                    }
+                }
+                if (cloud_in[i].y > coord_z.y or fabs(cloud_in[i].y - coord_z.y)<0.01)
+                {
+                    if (cloud_in[i].z > coord_z.z)
+                    {
+                        coord_z.x = cloud_in[i].x;
+                        coord_z.y = cloud_in[i].y;
+                        coord_z.z = cloud_in[i].z;
+                    }
                 }
             }
             else
@@ -88,11 +103,13 @@ bool set_pos_cb(velo2rs::Position::Request &req,
     z_coord = req.vertical_coord;
     d = req.dis;
 
-    // Update the coordiante of left and right coordinates
-    left_point.y = y_coord;
-    left_point.z = z_coord;
-    right_point.y = y_coord;
-    right_point.z = z_coord;
+    // Update the coordiante of 3 points
+    coord_o.y = y_coord;
+    coord_o.z = z_coord;
+    coord_x.y = y_coord;
+    coord_x.z = z_coord;
+    coord_z.y = y_coord;
+    coord_z.z = z_coord;
 
     return true;
 }
@@ -100,17 +117,23 @@ bool set_pos_cb(velo2rs::Position::Request &req,
 bool record_point_cb(velo2rs::Record::Request &req,
                 velo2rs::Record::Response &res)
 {
-    if (req.side == "left")
+    if (req.position == "o")
     {
-        res.point_x = left_point.x;
-        res.point_y = left_point.y;
-        res.point_z = left_point.z;
+        res.point_x = coord_o.x;
+        res.point_y = coord_o.y;
+        res.point_z = coord_o.z;
     }
-    else if (req.side == "right")
+    else if (req.position == "x")
     {
-        res.point_x = right_point.x;
-        res.point_y = right_point.y;
-        res.point_z = right_point.z;
+        res.point_x = coord_x.x;
+        res.point_y = coord_x.y;
+        res.point_z = coord_x.z;
+    }
+    else if (req.position == "z")
+    {
+        res.point_x = coord_z.x;
+        res.point_y = coord_z.y;
+        res.point_z = coord_z.z;     
     }
     else
     {
@@ -132,12 +155,15 @@ int main(int argc, char** argv)
     record_point = nh.advertiseService("/record_point",record_point_cb);
 
     // Initialize points
-    left_point.x = 0.0;
-    left_point.y = y_coord;
-    left_point.z = z_coord;
-    right_point.x = 0.0;
-    right_point.y = y_coord;
-    right_point.z = z_coord;
+    coord_o.x = 0.0;
+    coord_o.y = y_coord;
+    coord_o.z = z_coord;
+    coord_x.x = 0.0;
+    coord_x.y = y_coord;
+    coord_x.z = z_coord;
+    coord_z.x = 0.0;
+    coord_z.y = y_coord;
+    coord_z.z = z_coord;
 
     ros::Rate loop_rate(50);
     while(ros::ok())
