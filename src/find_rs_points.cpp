@@ -122,18 +122,27 @@ bool record_point_cb(velo2rs::Record::Request &req,
         res.point_x = coord_o.x;
         res.point_y = coord_o.y;
         res.point_z = coord_o.z;
+        ros::param::set("/rs/point_o/x",coord_o.x);
+        ros::param::set("/rs/point_o/y",coord_o.y);
+        ros::param::set("/rs/point_o/z",coord_o.z);
     }
     else if (req.position == "x")
     {
         res.point_x = coord_x.x;
         res.point_y = coord_x.y;
         res.point_z = coord_x.z;
+        ros::param::set("/rs/point_x/x",coord_x.x);
+        ros::param::set("/rs/point_x/y",coord_x.y);
+        ros::param::set("/rs/point_x/z",coord_x.z);
     }
     else if (req.position == "z")
     {
         res.point_x = coord_z.x;
         res.point_y = coord_z.y;
-        res.point_z = coord_z.z;  
+        res.point_z = coord_z.z; 
+        ros::param::set("/rs/point_z/x",coord_z.x);
+        ros::param::set("/rs/point_z/y",coord_z.y);
+        ros::param::set("/rs/point_z/z",coord_z.z); 
     }
     else
     {
