@@ -23,6 +23,7 @@ static pcl::PointXYZ coord_o, coord_x, coord_z;
 
 void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &input)
 {
+    
     // Create a container for the output data
     pcl::PointCloud<pcl::PointXYZRGB> cloud_out;
 
