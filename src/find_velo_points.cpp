@@ -15,7 +15,7 @@ static ros::ServiceServer set_pos;
 static ros::ServiceServer record_point;
 static double y_coord = 0.0;
 static double z_coord = 0.0;
-static double d = 0.2;
+static double d = 0.1;
 
 static pcl::PointXYZ coord_o, coord_x, coord_z;
 
