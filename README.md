@@ -1,6 +1,6 @@
 # Velo2rs Calibration ROS Package
 
-This light-weighted and simple ROS package is used to calibrate and find extrinsic parameters between lidar and an RGB-D camera. The package provides a straightforward approach to finding reference points from point clouds in Rviz for calibration calculation. The package is also compatible with any two sensors that measure` sensor_msgs::PointCloud2`. An explanation of the algorithm can be found in my [portfolio post](https://jiasenzheng.github.io/projects/0-slam-and-point-cloud-colourisation).
+This light-weighted ROS package is used to calibrate and find extrinsic parameters between lidar and an RGB-D camera. The package provides a straightforward approach to finding reference points from point clouds in Rviz for calibration calculation. The package is also compatible with any two sensors that measure` sensor_msgs::PointCloud2`. An explanation of the algorithm can be found in my [portfolio post](https://jiasenzheng.github.io/projects/0-slam-and-point-cloud-colourisation).
 
 ## Dependencies
 * cv_bridge
